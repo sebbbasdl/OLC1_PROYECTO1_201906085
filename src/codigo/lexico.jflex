@@ -3,21 +3,21 @@ import static codigo.Tokens.*;
 %%
 %class Lexer
 %type Tokens
-L=[a-zA-Z_]+
-D=[0-9]+
-espacio=[ ,\t,\r]+
-Linea=[\n]
+D = [0-9]
+SigE = [\]-_\{-\}\[\!-\/\:-\@]
+L = [A-Za-z] 
+espacios=[ \r\t]+
+E = (\\\"|\\\'|\\n)
+P = [\"](((\\\")|(\\n)|(\\\'))|[^\\\"\n])*[\"]
+comment    =  ("<!"("!"[^>]|[^!]">"|[^><]|"<"[^!]|[^<]"!")*"!>")|(\/\/(.*)*)
 
 %{
     public String lexeme;
 %}
 %%
-{espacio} {/*Ignore*/}
-( "//"(.)* ) {/*Ignore*/}
-( Linea ) {return Linea;}
-( "\"" ) {lexeme=yytext(); return Comillas;}
-( "\'" ) {lexeme=yytext(); return ComillaSimple;}
+{comment} {}
 ( ":" ) {lexeme=yytext(); return DosPuntos;}
+("%%"|("%%"[\n])) {lexeme=yytext(); return DoblePorcentaje}
 ( ";" ) {lexeme=yytext(); return PuntoComa;}
 ( "CONJ" ) {lexeme=yytext(); return Conjunto;}
 ( "{" ) {lexeme=yytext(); return LlaveAbierta;}
@@ -30,30 +30,21 @@ Linea=[\n]
 ( "+" ) {lexeme=yytext(); return UnoOMas;}
 ( "*" ) {lexeme=yytext(); return CeroOMas;}
 ( "?" ) {lexeme=yytext(); return CeroOUna;}
+(",") {lexeme=yytext(); return Coma;}
 
-( "!" ) {lexeme=yytext(); return Exclamacion;}
-( "#" ) {lexeme=yytext(); return Numeral;}
-( "$" ) {lexeme=yytext(); return Dolar;}
-( "%" ) {lexeme=yytext(); return Porcentaje;}
-( "&" ) {lexeme=yytext(); return Ampersand;}
-( "(" ) {lexeme=yytext(); return ParentesisA;}
-( ")" ) {lexeme=yytext(); return ParentesisC;}
-( "," ) {lexeme=yytext(); return Coma;}
-( "/" ) {lexeme=yytext(); return BarraIncl;}
-( "<" ) {lexeme=yytext(); return Menorque;}
-( "=" ) {lexeme=yytext(); return Igual;}
-( "@" ) {lexeme=yytext(); return Arroba;}
-( "[" ) {lexeme=yytext(); return CorcheteAbierto;}
-( "]" ) {lexeme=yytext(); return CorcheteCerrado;}
-( "_" ) {lexeme=yytext(); return GuionBajo;}
-( "^" ) {lexeme=yytext(); return Elevado;}
-( "`" ) {lexeme=yytext(); return Acento;}
-{L}({L})* {lexeme=yytext(); return Identificador;}
-( "->" ) {lexeme=yytext(); return Asignacion;}
-( "<!" ) {lexeme=yytext(); return ComentarioAbierto;}
-( "!>" ) {lexeme=yytext(); return ComentarioCerrado;}
-({L}{L}|{D}|{espacio}|{Linea})* {lexeme=yytext(); return Texto;}
-. {return ERROR;}
+\n {yychar=1;}
+{espacios} {}
+
+(SigE) {lexeme=yytext(); return SignosEspeciales;}
+{L} {lexeme=yytext(); return Letra;}
+{D} {lexeme=yytext(); return Digito;}
+"\" \"" {lexeme=yytext(); return Diagonales;}
+{P} {lexeme=yytext(); return P;}
+{E} {lexeme=yytext(); return Especial;}
+
+
+. {return ERROR1;}
+
 
 
 

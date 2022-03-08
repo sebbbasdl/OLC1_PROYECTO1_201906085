@@ -10,10 +10,8 @@ package codigo;
  * @author sebas
  */
 public enum Tokens {
-    Linea,
-    Comillas,
-    ComillaSimple,
     DosPuntos,
+    DoblePorcentaje,
     PuntoComa,
     Conjunto,
     LlaveAbierta,
@@ -26,29 +24,14 @@ public enum Tokens {
     UnoOMas,
     CeroOMas,
     CeroOUna,
-    Exclamacion,
-    Numeral,
-    Dolar,
-    Porcentaje,
-    Ampersand,
-    ParentesisA,
-    ParentesisC,
-    Coma,
-    BarraIncl,
-    Menorque,
-    Igual,
-    Arroba,
-    CorcheteAbierto,
-    CorcheteCerrado,
-    GuionBajo,
-    Elevado,
-    Acento,
-    ERROR,
-    Identificador,
-    Texto,
-    Asignacion,
-    ComentarioAbierto,
-    ComentarioCerrado
+    SignosEspeciales,
+    Letra,
+    Digito,
+    Diagonales,
+    P,
+    Especial,
+    Coma
+    
     
     
 }

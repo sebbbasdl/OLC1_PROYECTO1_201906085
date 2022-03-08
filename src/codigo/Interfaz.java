@@ -274,10 +274,8 @@ public class Interfaz extends javax.swing.JFrame {
                         return;
                     }
                     switch (tokens) {
-                        case ERROR:
-                            resultado += "Simbolo no definido\n";
-                            break;
-                        case Identificador: case Texto: case Guion:
+                        
+                        case Letra: case Digito: case Coma: 
                             resultado += lexer.lexeme + ": Es un " + tokens + "\n";
                             break;
                         default:
