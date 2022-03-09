@@ -27,8 +27,11 @@ public class Proyecto1_OLC1 {
     {
         try {
             String ruta = "src/codigo/";
-            String opcFlex[] = {ruta + "lexico.jflex", "-d", ruta};
+            String opcFlex[] = {ruta + "lexicoCup.jflex", "-d", ruta};
             jflex.Main.generate(opcFlex);
+            
+            String opcCUP[] = {"-destdir", ruta, "-parser", "sintactico", ruta + "sintactico.cup"};
+            java_cup.Main.main(opcCUP);
             
         } catch (Exception e) {
             e.printStackTrace();

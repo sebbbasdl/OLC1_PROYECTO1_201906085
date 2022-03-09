@@ -5,7 +5,8 @@
  */
 package codigo;
 
-import codigo.Lexer;
+import codigo.Lexico;
+import codigo.sintactico;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java_cup.runtime.Symbol;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
@@ -258,34 +260,51 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void btn_EjecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EjecutarActionPerformed
         // TODO add your handling code here:
-        
+            
             String textoActualizado ="";
             textoActualizado=TextAreaConsola.getText();
             System.out.println("-----------\n"+textoActualizado);
-            String expr=  (String) TextAreaConsola.getText();   
-            Lexer lexer =new Lexer (new StringReader(expr));
+            //String expr=  (String) TextAreaConsola.getText();   
+            //Lexico lexer =new Lexico (new StringReader(expr));
             String resultado = "";
-            while (true) {
-                try {
-                    Tokens tokens = lexer.yylex();
-                    if (tokens == null) {
-                        resultado += "FIN";
-                        txtResultado.setText(resultado);
-                        return;
-                    }
-                    switch (tokens) {
-                        
-                        case Letra: case Digito: case Coma: 
-                            resultado += lexer.lexeme + ": Es un " + tokens + "\n";
-                            break;
-                        default:
-                            resultado += "Token: " + tokens + "\n";
-                            break;
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+            sintactico s=new sintactico(new codigo.Lexico(new StringReader(textoActualizado)));
+            
+            try {
+                s.parse();
+                resultado+="Analisis Sintactico Realizado \n\n";
+                 /*while (true) {
+
+                        Tokens tokens = lexer.yylex();
+                        if (tokens == null) {
+                            resultado += "FIN";
+                            txtResultado.setText(resultado);
+                            return;
+                        }
+                        switch (tokens) {
+
+                            case Letra: case Digito: case Coma: 
+                                resultado += lexer.lexeme + ": Es un " + tokens + "\n";
+                                break;
+                            default:
+                                resultado += "Token: " + tokens + "\n";
+                                break;
+                        }
+                 }*/
+                 
+                 
+            } catch (Exception e) {
+                Symbol sym =s.getS();
+                //Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, e);
+            
+            } 
+                
+            
+            
+            
+            
+            //Sintactico Salida Consola
+            
+            
         
     }//GEN-LAST:event_btn_EjecutarActionPerformed
 

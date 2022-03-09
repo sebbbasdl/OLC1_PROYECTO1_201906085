@@ -1,0 +1,178 @@
+package codigo; 
+import java_cup.runtime.*;
+import java.util.ArrayList;
+import java.util.List;
+
+
+
+parser code 
+{:
+
+    public List<tablaErrores> tablaE1 = new ArrayList<>();
+    public int contador = 1;
+
+    public void syntax_error(Symbol s){ 
+            tablaErrores errortabla1= null ;
+            System.out.println("Error Sintáctico en la Línea " + (s.left) +
+            " Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
+            errortabla1= new tablaErrores(contador,"SINTACTICO","No se esperaba este componente: "+s.value+".",s.left,s.right);
+            contador +=1;
+            tablaE1.add(errortabla1);
+        } 
+
+        public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+            tablaErrores errortabla1= null;
+            System.out.println("Error síntactico irrecuperable en la Línea " + 
+            (s.left)+ " Columna "+s.right+". Componente " + s.value + 
+            " no reconocido."); 
+
+              errortabla1= new tablaErrores(contador,"SINTACTICO","Componente "+s.value+"no reconocido.",s.left,s.right);
+              contador+=1;
+              tablaE1.add(errortabla1);
+        }
+
+    private Symbol s;
+
+    public Symbol getS(){
+        return this.s;
+}
+
+:}
+
+terminal String DosPuntos,DoblePorcentaje,PuntoComa,Conjunto,LlaveAbierta,LlaveCierra,Guion,Mayorque,GuionCurvo,Punto;
+terminal String Disyuncion,UnoOMas,CeroOMas,CeroOUna,SignosEspeciales,Letra,Digito,Diagonales,Cadena,Especial,Coma;
+
+non terminal String inicio;
+non terminal String conjuntos,expresiones, pruebaExpre;
+non terminal String  Identificador, OpcionesIdentificador,FinIdentificador, Numero;
+non terminal String CaracteresValidos, ExpresionesValidas,ExpresionesRegulares, conjuntos1 ,datoComa, Numero2, Palabra, Palabra2, comaDato;
+non terminal String masconjuntos,ExpresionesRegulares2;
+
+
+precedence left UnoOMas, CeroOMas, Punto, CeroOUna, Disyuncion;
+
+start with inicio;
+
+inicio ::= LlaveAbierta conjuntos ExpresionesRegulares DoblePorcentaje DoblePorcentaje pruebaExpre LlaveCierra;
+
+conjuntos::= conjuntos1 masconjuntos
+            |conjuntos1
+;
+
+masconjuntos::=conjuntos
+;
+
+conjuntos1 ::= Conjunto DosPuntos Identificador Guion Mayorque Letra GuionCurvo Letra PuntoComa
+            |Conjunto DosPuntos Identificador Guion Mayorque Numero GuionCurvo Numero PuntoComa
+            |Conjunto DosPuntos Identificador Guion Mayorque SignosEspeciales GuionCurvo SignosEspeciales PuntoComa
+            |Conjunto DosPuntos Identificador Guion Mayorque datoComa PuntoComa
+            
+;
+Identificador ::= Letra
+                | Letra OpcionesIdentificador
+;
+
+OpcionesIdentificador ::= FinIdentificador
+                        | FinIdentificador OpcionesIdentificador
+                        
+;
+
+FinIdentificador::= SignosEspeciales  
+                   | Letra
+                   | Digito
+;
+
+Numero::= Digito Numero2
+        | Digito 
+;
+
+Numero2::= Numero
+;
+
+Palabra::= Letra Palabra2
+        | Letra
+;
+
+Palabra2::= Palabra
+;
+
+     
+datoComa::= Palabra comaDato
+          | Palabra
+          | Numero comaDato
+          | Numero
+          | SignosEspeciales comaDato
+          | SignosEspeciales
+          | PuntoComa comaDato
+          | PuntoComa
+          | LlaveAbierta comaDato
+          | LlaveAbierta
+          | LlaveCierra comaDato
+          | LlaveCierra
+          | Mayorque comaDato
+          | Mayorque
+          | Guion comaDato
+          | Guion
+          | Punto comaDato
+          | Punto
+          | Disyuncion comaDato
+          | Disyuncion
+          | UnoOMas comaDato
+          | UnoOMas
+          | CeroOMas comaDato
+          | CeroOMas
+          | CeroOUna comaDato
+          | CeroOUna
+          
+;
+
+comaDato::= Coma datoComa
+;
+
+pruebaExpre::= Identificador DosPuntos Cadena PuntoComa
+               |pruebaExpre Identificador DosPuntos Cadena PuntoComa
+
+;
+
+ExpresionesRegulares::= Identificador Guion Mayorque expresiones PuntoComa
+                    |Identificador Guion Mayorque expresiones PuntoComa ExpresionesRegulares2
+;
+
+ExpresionesRegulares2::=ExpresionesRegulares
+;
+
+
+
+expresiones::= CeroOMas CaracteresValidos
+               |CeroOMas ExpresionesValidas
+               |Punto CaracteresValidos expresiones
+               |Punto expresiones CaracteresValidos
+               |Punto expresiones expresiones
+               |Punto CaracteresValidos CaracteresValidos
+               |Disyuncion CaracteresValidos ExpresionesValidas
+               |Disyuncion expresiones CaracteresValidos
+               |Disyuncion expresiones expresiones
+               |Disyuncion CaracteresValidos CaracteresValidos
+               |UnoOMas CaracteresValidos
+               |UnoOMas ExpresionesValidas
+               |CeroOUna CaracteresValidos
+               |CeroOUna ExpresionesValidas
+;
+
+CaracteresValidos::=Diagonales
+                    |Cadena
+                    |LlaveAbierta Identificador LlaveCierra
+                    |Especial
+                    
+;
+
+ExpresionesValidas::= Punto CaracteresValidos expresiones
+               |Punto expresiones CaracteresValidos
+               |Punto expresiones expresiones
+               |Punto CaracteresValidos CaracteresValidos
+               |Disyuncion CaracteresValidos ExpresionesValidas
+               |Disyuncion expresiones CaracteresValidos
+               |Disyuncion expresiones expresiones
+               |Disyuncion CaracteresValidos CaracteresValidos
+;
+

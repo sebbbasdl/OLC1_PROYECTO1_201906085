@@ -28,7 +28,7 @@ public enum Tokens {
     Letra,
     Digito,
     Diagonales,
-    P,
+    Cadena,
     Especial,
     Coma
     
