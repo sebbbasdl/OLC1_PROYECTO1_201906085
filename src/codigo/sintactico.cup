@@ -2,6 +2,7 @@ package codigo;
 import java_cup.runtime.*;
 import java.util.ArrayList;
 import java.util.List;
+import codigo.tablaErrores;
 
 
 
@@ -63,70 +64,70 @@ masconjuntos::=conjuntos
 ;
 
 conjuntos1 ::= Conjunto DosPuntos Identificador Guion Mayorque Letra GuionCurvo Letra PuntoComa
-            |Conjunto DosPuntos Identificador Guion Mayorque Numero GuionCurvo Numero PuntoComa
+            |Conjunto:a DosPuntos Identificador Guion Mayorque Numero GuionCurvo Numero PuntoComa 
             |Conjunto DosPuntos Identificador Guion Mayorque SignosEspeciales GuionCurvo SignosEspeciales PuntoComa
             |Conjunto DosPuntos Identificador Guion Mayorque datoComa PuntoComa
             
 ;
-Identificador ::= Letra
-                | Letra OpcionesIdentificador
+Identificador ::= Letra:a {:RESULT = a; :}
+                | Letra:a OpcionesIdentificador:b {:RESULT = a+b; :}
 ;
 
-OpcionesIdentificador ::= FinIdentificador
-                        | FinIdentificador OpcionesIdentificador
+OpcionesIdentificador ::= FinIdentificador:a {:RESULT = a; :}
+                        | FinIdentificador:a OpcionesIdentificador:b {:RESULT = a+b; :}
                         
 ;
 
-FinIdentificador::= SignosEspeciales  
-                   | Letra
-                   | Digito
+FinIdentificador::= SignosEspeciales  :a {:RESULT = a; :}
+                   | Letra :a {:RESULT = a; :}
+                   | Digito :a {:RESULT = a; :}
 ;
 
-Numero::= Digito Numero2
-        | Digito 
+Numero::= Digito:a Numero2:b {:RESULT = a+b; :}
+        | Digito:a {:RESULT = a; :}
 ;
 
-Numero2::= Numero
+Numero2::= Numero:a {:RESULT = a; :}
 ;
 
-Palabra::= Letra Palabra2
-        | Letra
+Palabra::= Letra:a Palabra2:b {:RESULT = a+b; :}
+        | Letra:a {:RESULT = a; :}
 ;
 
-Palabra2::= Palabra
+Palabra2::= Palabra:a {:RESULT = a; :}
 ;
 
      
 datoComa::= Palabra comaDato
-          | Palabra
+          | Palabra:a                   {:RESULT = a; :}
           | Numero comaDato
-          | Numero
+          | Numero:a                      {:RESULT = a; :}
           | SignosEspeciales comaDato
-          | SignosEspeciales
+          | SignosEspeciales:a             {:RESULT = a; :}
           | PuntoComa comaDato
-          | PuntoComa
+          | PuntoComa:a                     {:RESULT = a; :}
           | LlaveAbierta comaDato
-          | LlaveAbierta
+          | LlaveAbierta:a                  {:RESULT = a; :}
           | LlaveCierra comaDato
-          | LlaveCierra
+          | LlaveCierra:a                   {:RESULT = a; :}
           | Mayorque comaDato
-          | Mayorque
+          | Mayorque:a                      {:RESULT = a; :}
           | Guion comaDato
-          | Guion
+          | Guion:a                         {:RESULT = a; :}
           | Punto comaDato
-          | Punto
+          | Punto:a                         {:RESULT = a; :}
           | Disyuncion comaDato
-          | Disyuncion
+          | Disyuncion:a                    {:RESULT = a; :}
           | UnoOMas comaDato
-          | UnoOMas
+          | UnoOMas:a                       {:RESULT = a; :}
           | CeroOMas comaDato
-          | CeroOMas
+          | CeroOMas:a                      {:RESULT = a; :}
           | CeroOUna comaDato
-          | CeroOUna
+          | CeroOUna:a                      {:RESULT = a; :}
           
 ;
 
-comaDato::= Coma datoComa
+comaDato::= Coma:a datoComa                 {:RESULT = a; :}
 ;
 
 pruebaExpre::= Identificador DosPuntos Cadena PuntoComa
@@ -134,45 +135,46 @@ pruebaExpre::= Identificador DosPuntos Cadena PuntoComa
 
 ;
 
-ExpresionesRegulares::= Identificador Guion Mayorque expresiones PuntoComa
-                    |Identificador Guion Mayorque expresiones PuntoComa ExpresionesRegulares2
+ExpresionesRegulares::= Identificador Guion Mayorque expresiones:a PuntoComa {: System.out.println(a+"holaserenexin"); :}
+                    |Identificador:b Guion Mayorque expresiones:a PuntoComa ExpresionesRegulares2 {: System.out.println(a+" holaaaaaaaaa"+b); :}
 ;
 
-ExpresionesRegulares2::=ExpresionesRegulares
+ExpresionesRegulares2::=ExpresionesRegulares:a {:RESULT = a; :}
 ;
 
 
 
-expresiones::= CeroOMas CaracteresValidos
-               |CeroOMas ExpresionesValidas
-               |Punto CaracteresValidos expresiones
-               |Punto expresiones CaracteresValidos
-               |Punto expresiones expresiones
-               |Punto CaracteresValidos CaracteresValidos
-               |Disyuncion CaracteresValidos ExpresionesValidas
-               |Disyuncion expresiones CaracteresValidos
-               |Disyuncion expresiones expresiones
-               |Disyuncion CaracteresValidos CaracteresValidos
-               |UnoOMas CaracteresValidos
-               |UnoOMas ExpresionesValidas
-               |CeroOUna CaracteresValidos
-               |CeroOUna ExpresionesValidas
+expresiones::= CeroOMas CaracteresValidos:a {:RESULT=a; System.out.println("*"+a+"SOY EXPRESION 1"); :}
+               |CeroOMas ExpresionesValidas:a {:RESULT=a; System.out.println(a+"*   "+"SOY EXPRESION 2"); :}
+               |Punto CaracteresValidos:a expresiones:b {:RESULT=a+b; System.out.println(a+"."+b+"SOY EXPRESION 3"); :}
+               |Punto expresiones:a CaracteresValidos:b {:RESULT=a+b; System.out.println("."+a+b+"SOY EXPRESION 4"); :}
+               |Punto expresiones:a expresiones:b {:RESULT=a; System.out.println("."+a+b+"SOY EXPRESION 5"); :}
+               |Punto CaracteresValidos:a CaracteresValidos:b {:RESULT=a+b; System.out.println("."+a+b+"SOY EXPRESION 6"); :}
+               |Disyuncion CaracteresValidos:a expresiones:b {:RESULT=a+b; System.out.println("|"+a+b+"SOY EXPRESION 7"); :}
+               |Disyuncion expresiones:a CaracteresValidos:b {:RESULT=a+b; System.out.println("|"+a+b+"SOY EXPRESION 8"); :}
+               |Disyuncion expresiones:a expresiones:b {:RESULT=a+b; System.out.println("|"+a+b+"SOY EXPRESION 9"); :}
+               |Disyuncion CaracteresValidos:a CaracteresValidos:b {:RESULT=a+b; System.out.println(a+"|"+b+"SOY EXPRESION 10"); :}
+               |UnoOMas CaracteresValidos:a {:RESULT=a; System.out.println("+"+a+"SOY EXPRESION 11"); :}
+               |UnoOMas ExpresionesValidas:a {:RESULT=a; System.out.println("+"+a+"SOY EXPRESION 12"); :}
+               |CeroOUna CaracteresValidos:a {:RESULT=a; System.out.println("?"+a+"SOY EXPRESION 13"); :}
+               |CeroOUna ExpresionesValidas:a {:RESULT=a; System.out.println("?"+a+"SOY EXPRESION 14"); :}
 ;
 
-CaracteresValidos::=Diagonales
-                    |Cadena
-                    |LlaveAbierta Identificador LlaveCierra
-                    |Especial
+CaracteresValidos::=Diagonales:a {:RESULT = a; :}
+                    |Cadena:a {:RESULT = a; :}
+                    |LlaveAbierta:a Identificador:b LlaveCierra:c {:RESULT = a+b+c; :}
+                    |Especial:a {:RESULT = a; :}
                     
 ;
 
-ExpresionesValidas::= Punto CaracteresValidos expresiones
-               |Punto expresiones CaracteresValidos
-               |Punto expresiones expresiones
-               |Punto CaracteresValidos CaracteresValidos
-               |Disyuncion CaracteresValidos ExpresionesValidas
-               |Disyuncion expresiones CaracteresValidos
-               |Disyuncion expresiones expresiones
-               |Disyuncion CaracteresValidos CaracteresValidos
+ExpresionesValidas::= 
+                Punto CaracteresValidos:a expresiones:b {: System.out.println("."+a+b+"SOY EXPRESION2 1"); :}
+               |Punto expresiones:a CaracteresValidos:b {: System.out.println("."+a+b+"SOY EXPRESION2 2"); :}
+               |Punto expresiones:a expresiones:b {: System.out.println("."+a+b+"SOY EXPRESION2 3"); :}
+               |Punto CaracteresValidos:a CaracteresValidos:b {: System.out.println("."+a+b+"SOY EXPRESION2 4"); :}
+               |Disyuncion CaracteresValidos:a expresiones:b {: System.out.println(a+"|"+b+"SOY EXPRESION2 5"); :}
+               |Disyuncion expresiones:a CaracteresValidos:b {: System.out.println("|"+a+b+"SOY EXPRESION2 6"); :}
+               |Disyuncion expresiones:a expresiones:b {: System.out.println("|"+a+b+"SOY EXPRESION2 7"); :}
+               |Disyuncion CaracteresValidos:a CaracteresValidos:b {: System.out.println("|"+a+b+"SOY EXPRESION2 8"); :}
 ;
 

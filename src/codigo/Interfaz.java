@@ -12,12 +12,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java_cup.runtime.Symbol;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
+import codigo.tablaErrores;
 
 /**
  *
@@ -26,6 +29,7 @@ import javax.swing.JTabbedPane;
 public class Interfaz extends javax.swing.JFrame {
     
     JTabbedPane pestañas ;
+    public List<tablaErrores> tablaE11 = new ArrayList<>();
     
 
     /**
@@ -251,7 +255,24 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_guardarActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
+        String imprimir="hola";
+        tablaE11.clear();
+        Lexico lexical = new codigo.Lexico(new StringReader(TextAreaConsola.getText()));
+        sintactico s=new codigo.sintactico(lexical);
+        s.contador = lexical.contador;
+        try {
+            s.parse();
+        } catch (Exception ex) {
+            Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        tablaE11.addAll(lexical.tablaE1);
+        tablaE11.addAll(s.tablaE1);
+            for (tablaErrores info: tablaE11){
+                imprimir += "contador: "+info.contador+" "+"tipo: "+info.tipoError+" "+"info: "+info.infoError+" "+"fila: "+info.fila+" "+"columna: "+info.columna+" \n";
+                
+            }
+            System.out.println(imprimir);
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void btn_nuevoArchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_nuevoArchActionPerformed
@@ -297,6 +318,15 @@ public class Interfaz extends javax.swing.JFrame {
                 //Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, e);
             
             } 
+            
+            String imprimir="";
+            for (tablaErrores info: tablaE11){
+                imprimir += "contador: "+info.contador+" "+"tipo: "+info.tipoError+" "+"info: "+info.infoError+" "+"fila: "+info.fila+" "+"columna: "+info.columna+" \n";
+                
+            }
+            System.out.println(imprimir);
+            
+            
                 
             
             
